@@ -1,0 +1,303 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>快速认识 C# 类型系统 | Tyex的博客</title><meta name="author" content="Tyex,taamyjipyjam@outlook.com"><meta name="copyright" content="Tyex"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="（先决条件：知道 C# 怎么声明数字类型和字符串变量，会调用如 Console.WriteLine() 等方法） 前言：对象的描述在程序设计中，我们需要给对象建立模型。描述一个对象（也可以理解为实体），我们通常用属性去表示它，比如，我要描述某个叫张三的学生，可以将他表示成： 123456名字：张三年龄：20性别：男身高：170cm体重：60kg体育爱好：打篮球  从语义上来看，我们已经通过上述描述">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速认识 C# 类型系统">
+<meta property="og:url" content="https://www.tyex.ink/2025/06/01/2025-06-01-type-systems/index.html">
+<meta property="og:site_name" content="Tyex的博客">
+<meta property="og:description" content="（先决条件：知道 C# 怎么声明数字类型和字符串变量，会调用如 Console.WriteLine() 等方法） 前言：对象的描述在程序设计中，我们需要给对象建立模型。描述一个对象（也可以理解为实体），我们通常用属性去表示它，比如，我要描述某个叫张三的学生，可以将他表示成： 123456名字：张三年龄：20性别：男身高：170cm体重：60kg体育爱好：打篮球  从语义上来看，我们已经通过上述描述">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://media.licdn.com/dms/image/v2/D4D12AQE09eA5UQCy0w/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1686216110154?e=2147483647&v=beta&t=mLIYIPNnGkH3RBqtAbgSkwiJ92lcT4UjXQqHikxr4SU">
+<meta property="article:published_time" content="2025-06-01T10:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-02T18:13:54.353Z">
+<meta property="article:author" content="Tyex">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="C#">
+<meta property="article:tag" content="WPF">
+<meta property="article:tag" content=".NET">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://media.licdn.com/dms/image/v2/D4D12AQE09eA5UQCy0w/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1686216110154?e=2147483647&v=beta&t=mLIYIPNnGkH3RBqtAbgSkwiJ92lcT4UjXQqHikxr4SU"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://www.tyex.ink/2025/06/01/2025-06-01-type-systems/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '快速认识 C# 类型系统',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-06-03 02:13:54'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2024/08/17/A1MjUCnsRo6GSD9.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">64</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa-brands fa-blogger-b"></i><span> 所有博客</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="https://www.tyex.ink/"><i class="fa-fw fas fa-home"></i><span> 返回主页</span></a></div><div class="menus_item"><a class="site-page" href="https://www.tyex.ink/"><i class="fa-fw fa-solid fa-cloud"></i><span> 个人云盘</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://media.licdn.com/dms/image/v2/D4D12AQE09eA5UQCy0w/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1686216110154?e=2147483647&amp;v=beta&amp;t=mLIYIPNnGkH3RBqtAbgSkwiJ92lcT4UjXQqHikxr4SU')"><nav id="nav"><span id="blog-info"><a href="/" title="Tyex的博客"><img class="site-icon" src="https://s2.loli.net/2024/08/17/A1MjUCnsRo6GSD9.png"/><span class="site-name">Tyex的博客</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa-brands fa-blogger-b"></i><span> 所有博客</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="https://www.tyex.ink/"><i class="fa-fw fas fa-home"></i><span> 返回主页</span></a></div><div class="menus_item"><a class="site-page" href="https://www.tyex.ink/"><i class="fa-fw fa-solid fa-cloud"></i><span> 个人云盘</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">快速认识 C# 类型系统</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-01T10:00:00.000Z" title="发表于 2025-06-01 18:00:00">2025-06-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-02T18:13:54.353Z" title="更新于 2025-06-03 02:13:54">2025-06-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/">代码编程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="快速认识 C# 类型系统"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>（先决条件：知道 C# 怎么声明数字类型和字符串变量，会调用如 <code>Console.WriteLine()</code> 等方法）</p>
+<h2 id="前言：对象的描述"><a href="#前言：对象的描述" class="headerlink" title="前言：对象的描述"></a>前言：对象的描述</h2><p>在程序设计中，我们需要给对象建立模型。描述一个对象（也可以理解为实体），我们通常用属性去表示它，比如，我要描述某个叫张三的学生，可以将他表示成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">名字：张三</span><br><span class="line">年龄：20</span><br><span class="line">性别：男</span><br><span class="line">身高：170cm</span><br><span class="line">体重：60kg</span><br><span class="line">体育爱好：打篮球</span><br></pre></td></tr></table></figure>
+
+<p>从语义上来看，我们已经通过上述描述，使用 6 个属性，完成了对“张三”这个对象的建模。</p>
+<p>在 C# 中，这个张三可以通过创建一个匿名对象来创建：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> student1 = <span class="keyword">new</span> &#123; Name = <span class="string">&quot;张三&quot;</span>, Age = <span class="number">20</span>, Gender = <span class="string">&quot;男&quot;</span>, Height = <span class="number">170</span>, Weight = <span class="number">60</span>, Hobby = <span class="string">&quot;打篮球&quot;</span> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这是一个包含初始化部的声明，等号右边的匿名对象通过关键字 <code>new</code> 和对象初始化器 <code>&#123; 属性名1 = 值1, 属性名2 = 值2, ... &#125;</code> 来创建，然后赋值给 <code>student1</code> 变量，而关键字 <code>var</code> 用作类型推断。匿名对象意味着它并不是某个类型系统的实例。</p>
+<h2 id="class-：类"><a href="#class-：类" class="headerlink" title="class ：类"></a><code>class</code> ：类</h2><p>如果我们对很多个学生建模，比如约翰、菊次郎等，都用这同样的六个属性，此时，对“学生”这个概念进行建模（不是具体的学生）就有了它的意义。建模思路如下：</p>
+<p><em><strong>“‘学生’这个模型，就是一个具有名字、年龄、性别、身高、体重、体育爱好等属性的类型。而张三、约翰、菊次郎等具体的学生，就是这个模型的一个实例。”</strong></em></p>
+<p>C# 正好提供了“类”这个概念，实现了这样的建模。使用关键字 <code>class</code> 可以声明一个类，并在类体中声明属性，比如：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Student</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;    <span class="comment">// 姓名</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;        <span class="comment">// 年龄</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Gender &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;  <span class="comment">// 性别</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">double</span> Height &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;  <span class="comment">// 身高</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">double</span> Weight &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;  <span class="comment">// 体重</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Hobby &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;   <span class="comment">// 体育爱好</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时，我们成功定义了一个含有 6 个属性的类 <code>Student</code>，它可以用来描述学生。然后只要进行实例化，就可以创建具体的学生对象：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> student1 = <span class="keyword">new</span> Student &#123; Name = <span class="string">&quot;张三&quot;</span>, Age = <span class="number">20</span>, Gender = <span class="string">&quot;男&quot;</span>, Height = <span class="number">170</span>, Weight = <span class="number">60</span>, Hobby = <span class="string">&quot;打篮球&quot;</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> student2 = <span class="keyword">new</span> Student &#123; Name = <span class="string">&quot;约翰&quot;</span>, Age = <span class="number">21</span>, Gender = <span class="string">&quot;男&quot;</span>, Height = <span class="number">165</span>, Weight = <span class="number">55</span>, Hobby = <span class="string">&quot;乒乓球&quot;</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> student3 = <span class="keyword">new</span> Student &#123; Name = <span class="string">&quot;菊次郎&quot;</span>, Age = <span class="number">19</span>, Gender = <span class="string">&quot;女&quot;</span>, Height = <span class="number">160</span>, Weight = <span class="number">50</span>, Hobby = <span class="string">&quot;游泳&quot;</span> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码就分别把张三、约翰、菊次郎三个学生对象通过对 <code>Student</code> 的实例化，储存为变量名 <code>student1</code>、<code>student2</code>、<code>student3</code>。</p>
+<p>你可能对 <code>&#123; get; set; &#125;</code> 表示疑惑。因为类的数据成员可以分为字段（无访问器）和属性（有访问器），而 <code>&#123; get; set; &#125;</code> 就是一种访问器，表示“自动属性”，也就是我们只要通过声明这个属性，就会隐式生成一个字段。</p>
+<p><strong>那字段和属性本质上有什么区别？</strong></p>
+<p>字段可以说是类“最本质的数据成员”，它是类这个模型本质的数据。姓名、年龄、性别、身高、体重、体育爱好这些数据，都是属于学生对象的本质信息，所以，学生对象一定包含这些字段。</p>
+<p>而属性并不是最本质的数据成员，它是根据字段实时计算而获取的。这里所谓“姓名”属性，实际上是对象里面储存了“姓名”字段，然后当我们访问“姓名”属性时，它返回“姓名”字段的值。自动属性的作用就是这样隐式声明了字段。如果不适用自动属性，那么声明“姓名”属性的语法就相当于：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="built_in">string</span> _name;</span><br><span class="line"><span class="keyword">public</span> <span class="built_in">string</span> Name</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span> &#123; <span class="keyword">return</span> _name; &#125;   <span class="comment">// get 访问器</span></span><br><span class="line">    <span class="keyword">set</span> &#123; _name = <span class="keyword">value</span>; &#125;  <span class="comment">// set 访问器</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不难看出，<code>get</code> 访问器表示访问 <code>Name</code> 这个标识符时，返回代码块里 <code>return</code> 后面的值；而 <code>set</code> 访问器是设置 <code>Name</code> 这个标识符时，执行代码块里的操作，比如给字段赋值。属性可以只有 <code>get</code> 访问器，做只读属性。比如，在有学生有字段“身高”和“体重”的情况下，我们可以声明只读属性“体质指数”：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="built_in">double</span> BMI</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span> &#123; <span class="keyword">return</span> Weight / (Height / <span class="number">100</span>) / (Height / <span class="number">100</span>); &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 也可以写成</span></span><br><span class="line"><span class="comment">// public double BMI =&gt; Weight / (Height / 100) / (Height / 100);</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>那 <code>private</code> 和 <code>public</code> 关键字有什么用？</strong></p>
+<p><code>private</code> 关键字表示这个成员只能在类内部访问，而 <code>public</code> 关键字表示这个成员可以在类外部（比如控制台应用里面 <code>Program</code> 类的 <code>Main</code> 方法）访问。</p>
+<p><strong>方法</strong></p>
+<p>除了字段和属性，方法也是类的成员。方法接受输入一些参数（不输入也可以），然后返回一些输出（也可以不返回）。比如，学生可以定义一个“吃饭”方法，传入饭量，不输出内容，但是体重会增加：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Eat</span>(<span class="params"><span class="built_in">double</span> amount</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    Weight += amount * <span class="number">0.1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>静态成员</strong></p>
+<p>静态成员是指类级别的成员，它不依赖于实例对象，而是类本身。通俗来说它并不关于对象，反而像把类当成命名空间储存全局变量或方法。比如，在学生类可以定义一个“学生数量”作为静态属性：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> StudentCount &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这样，我们就可以通过 <code>Student.StudentCount</code> 来获取学生数量，而不需要实例化学生对象。</p>
+<p>顺带提一句，常用的 <code>Console.WriteLine()</code> 方法就是 <code>System.Console</code> 类的静态方法。</p>
+<p><strong>构造函数</strong></p>
+<p>构造函数在类体中用 <code>类名(参数列表)</code> 声明，在实例化时执行。比如给 <code>Student</code> 类可以添加一个这样的构造函数：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Student</span>(<span class="params"><span class="built_in">string</span> name, <span class="built_in">int</span> age, <span class="built_in">string</span> gender, <span class="built_in">double</span> height, <span class="built_in">double</span> weight, <span class="built_in">string</span> hobby</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    Name = name;</span><br><span class="line">    Age = age;</span><br><span class="line">    Gender = gender;</span><br><span class="line">    Height = height;</span><br><span class="line">    Weight = weight;</span><br><span class="line">    Hobby = hobby;</span><br><span class="line">    StudentCount++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在主程序中，只要调用：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Student student1 = <span class="keyword">new</span> Student(<span class="string">&quot;张三&quot;</span>, <span class="number">20</span>, <span class="string">&quot;男&quot;</span>, <span class="number">170</span>, <span class="number">60</span>, <span class="string">&quot;打篮球&quot;</span>);  <span class="comment">// 免去对象初始化器</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// C# 12 开始可以这样写</span></span><br><span class="line"><span class="comment">// Student student1 = new(&quot;张三&quot;, 20, &quot;男&quot;, 170, 60, &quot;打篮球&quot;);</span></span><br></pre></td></tr></table></figure>
+
+<p>类还支持方法重载、继承、多态这些功能，这里就不详细讲了。</p>
+<h2 id="struct-：结构体"><a href="#struct-：结构体" class="headerlink" title="struct ：结构体"></a><code>struct</code> ：结构体</h2><p>结构体类似于类，可以通过声明字段、属性和方法进行建模。但是，结构体不支持继承和多态。此外，类的实例属于引用类型，而结构体的实例属于值类型（后面会解释）。</p>
+<p>“体质”这种抽象指标就很适合用结构体建模：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> Physique</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">double</span> Height &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">double</span> Weight &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">double</span> BMI &#123; <span class="keyword">get</span> &#123; <span class="keyword">return</span> Weight / (Height / <span class="number">100</span>) / (Height / <span class="number">100</span>); &#125; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Physique</span>(<span class="params"><span class="built_in">double</span> height, <span class="built_in">double</span> weight</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Height = height;</span><br><span class="line">        Weight = weight;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 它的实例可以用作 Student 的属性</span></span><br><span class="line"><span class="keyword">class</span> <span class="title">Student</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Gender &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> Physique Physique &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Hobby &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>如何理解 <em>“类的实例属于引用类型，而结构体的实例属于值类型”</em> ？</strong></p>
+<p>在 C# 中，所有 <strong>值类型</strong> 都隐式继承自 <code>System.ValueType</code>（其本身继承自 <code>System.Object</code>），而所有 <strong>引用类型</strong> 都直接或间接继承自 <strong>System.Object</strong>。</p>
+<p>值类型和引用类型的核心区别，并不在于“栈”与“堆”的简单对立，而在于变量存储的是否是数据本身，还是对数据的引用。</p>
+<p>因此，引用类型变量是对象的引用，而值类型变量是值本身。当你把 <code>student1</code> 赋值给 <code>student2</code> 时，<code>student1</code> 和 <code>student2</code> 都指向同一个对象。而如果你把 <code>physique1</code> 赋值给 <code>physique2</code>，它们就是两个不同的对象。</p>
+<h2 id="enum-：枚举"><a href="#enum-：枚举" class="headerlink" title="enum ：枚举"></a><code>enum</code> ：枚举</h2><p>枚举像类、结构体一样都封装了数据成员，但它的所有数据成员都是静态的、是常量，且有序，并被称为“枚举成员”。</p>
+<p>“体育爱好”就很适合用枚举建模：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">enum</span> Hobby</span><br><span class="line">&#123;</span><br><span class="line">    Basketball,</span><br><span class="line">    Volleyball,</span><br><span class="line">    Tennis,</span><br><span class="line">    Swimming</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 它的实例可以用作 Student 的属性</span></span><br><span class="line"><span class="keyword">class</span> <span class="title">Student</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Gender &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> Physique Physique &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> Hobby Hobby &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>枚举不通过 <code>new</code> 关键字实例化，毕竟它所有成员都是静态的。访问枚举成员就直接返回枚举的实例，比如：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hobby yourHobby = Hobby.Basketball;</span><br></pre></td></tr></table></figure>
+
+<p>枚举成员还可以转为整型或字符串，比如：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> hobbyInt = (<span class="built_in">int</span>)yourHobby;  <span class="comment">// 返回对应的枚举顺序</span></span><br><span class="line"><span class="built_in">string</span> hobbyString = yourHobby.ToString();  <span class="comment">// 返回标识符字面量字符串</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="class-、struct-、enum-对比"><a href="#class-、struct-、enum-对比" class="headerlink" title="class 、struct 、enum 对比"></a><code>class</code> 、<code>struct</code> 、<code>enum</code> 对比</h2><p>这三者被我称为 C# 三大最常用的类型系统。</p>
+<p><strong>99%</strong> 情况下的实体建模都是用 <code>class</code> ，首先因为 <code>class</code> 本身实例是引用类型，变量传递计算量小，此外还允许继承、多态、方法重载等特性。每一个 <code>class</code> 实例都 <strong>具有身份</strong> ，批量小，信息大。</p>
+<p><code>struct</code> 如其名“结构体”，适合对结构化轻量数据结构建模。比如一个 <code>Point</code> 结构体，包含两个 <code>double</code> 类型的 <code>X</code> 和 <code>Y</code> 字段，可以用来表示二维坐标。像前面的 <code>Physique</code> 结构体，以及时间日期、颜色甚至是土建材料质地等，都可以用 <code>struct</code> 建模。<code>struct</code> 的实例 <strong>没有身份</strong> ，程序中会创建很多结构体的 <strong>大批量小对象</strong> ，对于这种场景，<code>struct</code> 就比 <code>class</code> 更适合。</p>
+<p><code>enum</code> 相对于前两者比较特殊，它可以比喻为直接面向已知有限的（可支持数字代号的）实例进行建模。比如性别只有男女两种（只能被枚举为男或女），就可以建立只有男女两种枚举成员的 <code>Gender</code> 枚举。体育爱好、学历，甚至是星座，都可以用 <code>enum</code> 建模。</p>
+<p>在实际项目中，<code>struct</code> 和 <code>enum</code> 通常是在 <code>class</code> 成员有需要进行建模时才用的。比如，在学生类中，可以用 <code>struct</code> 建模学生的体质，而用 <code>enum</code> 建模学生的体育爱好。</p>
+<h2 id="record、record-struct-：记录类、记录结构体"><a href="#record、record-struct-：记录类、记录结构体" class="headerlink" title="record、record struct ：记录类、记录结构体"></a><code>record</code>、<code>record struct</code> ：记录类、记录结构体</h2><p>这两者分别相当于把 <code>class</code> 和 <code>struct</code> 只允许通过构造函数赋值字段。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">record</span> <span class="title">Student</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">init</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">init</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Gender &#123; <span class="keyword">get</span>; <span class="keyword">init</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> Physique Physique &#123; <span class="keyword">get</span>; <span class="keyword">init</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> Hobby Hobby &#123; <span class="keyword">get</span>; <span class="keyword">init</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 或者</span></span><br><span class="line"><span class="comment">// record Student(string Name, int Age, string Gender, Physique Physique, Hobby Hobby)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建实例</span></span><br><span class="line"><span class="keyword">var</span> student1 = <span class="keyword">new</span> Student(<span class="string">&quot;张三&quot;</span>, <span class="number">20</span>, <span class="string">&quot;男&quot;</span>, <span class="keyword">new</span> Physique(<span class="number">170</span>, <span class="number">60</span>), Hobby.Basketball);</span><br></pre></td></tr></table></figure>
+
+<p>记录类实例一旦创建，就不能修改字段的值了。但如果它有成员是引用类型，还是可以改变这个成员的内部数据的。</p>
+<h2 id="interface-：接口"><a href="#interface-：接口" class="headerlink" title="interface ：接口"></a><code>interface</code> ：接口</h2><p>接口是一种抽象建模方式，它定义了一些方法签名，但不提供实现。接口可以被类、结构体、枚举实现，也可以被其他接口继承。</p>
+<p>比如，我们可以定义一个 <code>IAnimal</code> 接口，它定义了一些动物的基本行为：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title">IAnimal</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Eat</span>()</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Sleep</span>()</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Run</span>()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后，我们可以定义一些具体的动物类，实现 <code>IAnimal</code> 接口：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Dog</span> : <span class="title">IAnimal</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Eat</span>()</span> &#123; Console.WriteLine(<span class="string">&quot;狗吃骨头&quot;</span>); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Sleep</span>()</span> &#123; Console.WriteLine(<span class="string">&quot;狗睡觉&quot;</span>); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Run</span>()</span> &#123; Console.WriteLine(<span class="string">&quot;狗跑&quot;</span>); &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Cat</span> : <span class="title">IAnimal</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Eat</span>()</span> &#123; Console.WriteLine(<span class="string">&quot;猫吃鱼&quot;</span>); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Sleep</span>()</span> &#123; Console.WriteLine(<span class="string">&quot;猫睡觉&quot;</span>); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Run</span>()</span> &#123; Console.WriteLine(<span class="string">&quot;猫跑&quot;</span>); &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="delegate-：委托"><a href="#delegate-：委托" class="headerlink" title="delegate ：委托"></a><code>delegate</code> ：委托</h2><p>委托像是把方法做成了类型系统。它建模的内容包括:</p>
+<ul>
+<li>方法输入的参数类型</li>
+<li>返回类型（如果有）</li>
+</ul>
+<p>委托分为两种：</p>
+<ul>
+<li><code>Action&lt;T1, T2, ...&gt;</code>：无返回值，参数类型为 <code>T1</code>、<code>T2</code>、<code>...</code></li>
+<li><code>Func&lt;T1, T2, ..., TResult&gt;</code>：有返回值，参数类型为 <code>T1</code>、<code>T2</code>、<code>...</code>，返回类型为 <code>TResult</code></li>
+</ul>
+<p>委托实例可以储存方法引用，理论上只要是和委托类型兼容的方法都可以给委托实例进行引用，可以用 <code>+=</code> 运算符进行多播委托。</p>
+<p>定义委托和声明方法、调用委托和调用方法在语法上很相似：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">delegate</span> <span class="keyword">void</span> <span class="title">MyDelegate</span>(<span class="params"><span class="built_in">string</span> message</span>)</span>;  <span class="comment">// 声明了一个委托 Action&lt;string&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MyMethod</span>(<span class="params"><span class="built_in">string</span> message</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(message);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">MyDelegate myMethodDelegate = MyMethod;  <span class="comment">// 实例化，把 MyMethod 放进函数指针（委托实例）的引用中</span></span><br><span class="line"><span class="comment">// 如果没有定义 MyDelegate，你也可以写 Action&lt;string&gt; myMethodDelegate = MyMethod;</span></span><br><span class="line"><span class="comment">// 使用 lambda 表达式也可以创建委托实例</span></span><br><span class="line"><span class="comment">// MyDelegate myLambdaDelegate = (string message) =&gt; Console.WriteLine(message);</span></span><br><span class="line">myMethodDelegate += MyMethod;  <span class="comment">// 多播委托</span></span><br><span class="line">myMethodDelegate(<span class="string">&quot;Hello World!&quot;</span>);  <span class="comment">// 调用委托实例，输出两次 &quot;Hello World!&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>委托的应用：事件（event）</strong></p>
+<p>事件是一种特殊的委托实例，声明的时候要加上修饰符 <code>event</code>。</p>
+<p>通常使用 <code>事件名.Invoke(参数)</code> 触发事件。事件本身可以直接用 <code>事件名(参数)</code> 被调用，但如果事件无订阅者（没有引用方法），容易报错。</p>
+<p><code>事件名.Invoke(参数)</code> 通常作为表达式语句放在事件所在类的方法中，表示这个方法会在触发事件时调用。</p>
+<p>在主程序中，事件要 <strong>先绑定，再触发</strong> ：</p>
+<ul>
+<li>绑定事件：<code>事件名 += 方法</code> 把方法放进事件里面进行引用（多放几个可以多播委托）。</li>
+<li>触发事件：调用触发事件的方法。</li>
+</ul>
+<p>下面是一个使用事件的例子：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Alarm</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> EventHandler Ring;  <span class="comment">// 声明事件，使用 EventHandler</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TimeReached</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;时间到了！&quot;</span>);</span><br><span class="line">        Ring?.Invoke(<span class="keyword">this</span>, EventArgs.Empty); <span class="comment">// 触发事件</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Alarm alarm = <span class="keyword">new</span> Alarm();</span><br><span class="line">        alarm.Ring += OnAlarmRing; <span class="comment">// 绑定事件</span></span><br><span class="line"></span><br><span class="line">        alarm.TimeReached(); <span class="comment">// 触发事件</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OnAlarmRing</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;闹钟响了！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你可能会发现这里的代码里面，事件的声明是否使用 <code>event</code> 修饰符都可以。实际上它设置了委托实例的访问权限：外部只能够通过 <code>+=</code> <code>-=</code> 进行订阅和取消订阅（ <code>public</code> ），其它访问方式都是 <code>private</code> 的，比如赋值为 <code>null</code> 或直接调用。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://www.tyex.ink">Tyex</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://www.tyex.ink/2025/06/01/2025-06-01-type-systems/">https://www.tyex.ink/2025/06/01/2025-06-01-type-systems/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://www.tyex.ink" target="_blank">Tyex的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Python/">Python</a><a class="post-meta__tags" href="/tags/C/">C#</a><a class="post-meta__tags" href="/tags/WPF/">WPF</a><a class="post-meta__tags" href="/tags/NET/">.NET</a></div><div class="post_share"><div class="social-share" data-image="https://media.licdn.com/dms/image/v2/D4D12AQE09eA5UQCy0w/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1686216110154?e=2147483647&amp;v=beta&amp;t=mLIYIPNnGkH3RBqtAbgSkwiJ92lcT4UjXQqHikxr4SU" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/05/08/2025-05-08-make-BMG/" title="BMG 开发笔记"><img class="cover" src="https://s2.loli.net/2025/04/28/ST8xAQb2z1csPXL.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">BMG 开发笔记</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/05/08/2025-05-08-make-BMG/" title="BMG 开发笔记"><img class="cover" src="https://s2.loli.net/2025/04/28/ST8xAQb2z1csPXL.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-08</div><div class="title">BMG 开发笔记</div></div></a></div><div><a href="/2025/05/08/2025-05-24-interaction-Csharp-json/" title="在 C# 中交互 JSON 数据"><img class="cover" src="https://media.licdn.com/dms/image/v2/D4D12AQE09eA5UQCy0w/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1686216110154?e=2147483647&v=beta&t=mLIYIPNnGkH3RBqtAbgSkwiJ92lcT4UjXQqHikxr4SU" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-08</div><div class="title">在 C# 中交互 JSON 数据</div></div></a></div><div><a href="/2025/03/08/2025-03-08-WPF/" title="Tyex 的 WPF 学习笔记"><img class="cover" src="https://media.licdn.com/dms/image/v2/D4D12AQE09eA5UQCy0w/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1686216110154?e=2147483647&v=beta&t=mLIYIPNnGkH3RBqtAbgSkwiJ92lcT4UjXQqHikxr4SU" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-08</div><div class="title">Tyex 的 WPF 学习笔记</div></div></a></div><div><a href="/2024/10/06/2024-10-06-python-paradigm/" title="Python高级用法1——编程范式"><img class="cover" src="https://www.therightpro.com/wp-content/uploads/2021/12/python-programming-one.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-06</div><div class="title">Python高级用法1——编程范式</div></div></a></div><div><a href="/2024/09/27/2024-09-27-python-tutorial-1/" title="Python快速入门1————基本语法大纲"><img class="cover" src="https://www.therightpro.com/wp-content/uploads/2021/12/python-programming-one.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-27</div><div class="title">Python快速入门1————基本语法大纲</div></div></a></div><div><a href="/2024/11/09/2024-11-09-python-tutorial-1/" title="Python快速入门（新版）"><img class="cover" src="https://www.therightpro.com/wp-content/uploads/2021/12/python-programming-one.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-09</div><div class="title">Python快速入门（新版）</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2024/08/17/A1MjUCnsRo6GSD9.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tyex</div><div class="author-info__description">记录我的随笔，分享一些干货</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">64</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/tyex2004" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/TaamYjipYjam@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="Thttps://space.bilibili.com/420412587" target="_blank" title="Bilibili"><i class="fas fa-brands fa-bilibili" style="color: #f89bb4;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是Tyex的博客，欢迎访问！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">前言：对象的描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#class-%EF%BC%9A%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">class ：类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#struct-%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">3.</span> <span class="toc-text">struct ：结构体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#enum-%EF%BC%9A%E6%9E%9A%E4%B8%BE"><span class="toc-number">4.</span> <span class="toc-text">enum ：枚举</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#class-%E3%80%81struct-%E3%80%81enum-%E5%AF%B9%E6%AF%94"><span class="toc-number">5.</span> <span class="toc-text">class 、struct 、enum 对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#record%E3%80%81record-struct-%EF%BC%9A%E8%AE%B0%E5%BD%95%E7%B1%BB%E3%80%81%E8%AE%B0%E5%BD%95%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">6.</span> <span class="toc-text">record、record struct ：记录类、记录结构体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#interface-%EF%BC%9A%E6%8E%A5%E5%8F%A3"><span class="toc-number">7.</span> <span class="toc-text">interface ：接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#delegate-%EF%BC%9A%E5%A7%94%E6%89%98"><span class="toc-number">8.</span> <span class="toc-text">delegate ：委托</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/01/2025-06-01-type-systems/" title="快速认识 C# 类型系统"><img src="https://media.licdn.com/dms/image/v2/D4D12AQE09eA5UQCy0w/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1686216110154?e=2147483647&amp;v=beta&amp;t=mLIYIPNnGkH3RBqtAbgSkwiJ92lcT4UjXQqHikxr4SU" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="快速认识 C# 类型系统"/></a><div class="content"><a class="title" href="/2025/06/01/2025-06-01-type-systems/" title="快速认识 C# 类型系统">快速认识 C# 类型系统</a><time datetime="2025-06-01T10:00:00.000Z" title="发表于 2025-06-01 18:00:00">2025-06-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/05/08/2025-05-08-make-BMG/" title="BMG 开发笔记"><img src="https://s2.loli.net/2025/04/28/ST8xAQb2z1csPXL.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BMG 开发笔记"/></a><div class="content"><a class="title" href="/2025/05/08/2025-05-08-make-BMG/" title="BMG 开发笔记">BMG 开发笔记</a><time datetime="2025-05-08T08:12:00.000Z" title="发表于 2025-05-08 16:12:00">2025-05-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/05/08/2025-05-24-interaction-Csharp-json/" title="在 C# 中交互 JSON 数据"><img src="https://media.licdn.com/dms/image/v2/D4D12AQE09eA5UQCy0w/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1686216110154?e=2147483647&amp;v=beta&amp;t=mLIYIPNnGkH3RBqtAbgSkwiJ92lcT4UjXQqHikxr4SU" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="在 C# 中交互 JSON 数据"/></a><div class="content"><a class="title" href="/2025/05/08/2025-05-24-interaction-Csharp-json/" title="在 C# 中交互 JSON 数据">在 C# 中交互 JSON 数据</a><time datetime="2025-05-08T08:12:00.000Z" title="发表于 2025-05-08 16:12:00">2025-05-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/28/2025-04-29-gitthub/" title="Github 本地同步至仓库命令流程"><img src="https://s2.loli.net/2025/04/28/ST8xAQb2z1csPXL.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Github 本地同步至仓库命令流程"/></a><div class="content"><a class="title" href="/2025/04/28/2025-04-29-gitthub/" title="Github 本地同步至仓库命令流程">Github 本地同步至仓库命令流程</a><time datetime="2025-04-28T08:12:00.000Z" title="发表于 2025-04-28 16:12:00">2025-04-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/26/2025-04-26-GIS-jupyter/" title="ArcGIS Pro 笔记本（Jupyter Notebook）使用技巧"><img src="https://s2.loli.net/2024/09/14/Zbxq43GzkQ9Svdc.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ArcGIS Pro 笔记本（Jupyter Notebook）使用技巧"/></a><div class="content"><a class="title" href="/2025/04/26/2025-04-26-GIS-jupyter/" title="ArcGIS Pro 笔记本（Jupyter Notebook）使用技巧">ArcGIS Pro 笔记本（Jupyter Notebook）使用技巧</a><time datetime="2025-04-26T08:00:00.000Z" title="发表于 2025-04-26 16:00:00">2025-04-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Tyex</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
